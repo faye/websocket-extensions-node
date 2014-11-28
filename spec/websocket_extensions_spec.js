@@ -288,6 +288,11 @@ test.describe("Extensions", function() { with(this) {
         extensions.generateResponse("deflate; flag")
       }})
 
+      it("asks the extension for a server session with multiple offers", function() { with(this) {
+        expect(ext, "createServerSession").given([{a: true}, {b: true}]).exactly(1).returning(session)
+        extensions.generateResponse("deflate; a, deflate; b")
+      }})
+
       it("asks the session to generate a response", function() { with(this) {
         expect(session, "generateResponse").exactly(1).returning(response)
         extensions.generateResponse("deflate")
