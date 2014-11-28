@@ -4,11 +4,11 @@ var Parser = require('../lib/parser'),
 test.describe("Parser", function() { with(this) {
   describe("parseHeader", function() { with(this) {
     it("parses an empty header", function() { with(this) {
-      assertEqual( {}, Parser.parseHeader('') )
+      assertEqual( [], Parser.parseHeader('') )
     }})
 
     it("parses a missing header", function() { with(this) {
-      assertEqual( {}, Parser.parseHeader(undefined) )
+      assertEqual( [], Parser.parseHeader(undefined) )
     }})
 
     it("throws on invalid input", function() { with(this) {
@@ -16,39 +16,51 @@ test.describe("Parser", function() { with(this) {
     }})
 
     it("parses one offer with no params", function() { with(this) {
-      assertEqual( {a: {}}, Parser.parseHeader('a') )
+      assertEqual( [{name: "a", params: {}}],
+                   Parser.parseHeader('a') )
     }})
 
     it("parses two offers with no params", function() { with(this) {
-      assertEqual( {a: {}, b: {}}, Parser.parseHeader('a, b') )
+      assertEqual( [{name: "a", params: {}}, {name: "b", params: {}}],
+                   Parser.parseHeader('a, b') )
     }})
 
     it("parses a duplicate offer name", function() { with(this) {
-      assertEqual( {a: [{}, {}]}, Parser.parseHeader('a, a') )
+      assertEqual( [{name: "a", params: {}}, {name: "a", params: {}}],
+                   Parser.parseHeader('a, a') )
     }})
 
     it("parses a flag", function() { with(this) {
-      assertEqual( {a: {b: true}}, Parser.parseHeader('a; b') )
+      assertEqual( [{name: "a", params: {b: true}}],
+                   Parser.parseHeader('a; b') )
     }})
 
     it("parses an unquoted param", function() { with(this) {
-      assertEqual( {a: {b: 1}}, Parser.parseHeader('a; b=1') )
+      assertEqual( [{name: "a", params: {b: 1}}],
+                   Parser.parseHeader('a; b=1') )
     }})
 
     it("parses a quoted param", function() { with(this) {
-      assertEqual( {a: {b: 'hi, "there'}}, Parser.parseHeader('a; b="hi, \\"there"') )
+      assertEqual( [{name: "a", params: {b: 'hi, "there'}}],
+                   Parser.parseHeader('a; b="hi, \\"there"') )
     }})
 
     it("parses multiple params", function() { with(this) {
-      assertEqual( {a: {b: true, c: 1, d: 'hi'}}, Parser.parseHeader('a; b; c=1; d="hi"') )
+      assertEqual( [{name: "a", params: {b: true, c: 1, d: 'hi'}}],
+                   Parser.parseHeader('a; b; c=1; d="hi"') )
     }})
 
     it("parses duplicate params", function() { with(this) {
-      assertEqual( {a: {b: [true, 'hi'], c: 1}}, Parser.parseHeader('a; b; c=1; b="hi"') )
+      assertEqual( [{name: "a", params: {b: [true, 'hi'], c: 1}}],
+                   Parser.parseHeader('a; b; c=1; b="hi"') )
     }})
 
     it("parses multiple complex offers", function() { with(this) {
-      assertEqual( {a: [{b: 1}, {b: true}], c: [{}, {e: ['hi, there', true]}], b: {d: true}},
+      assertEqual( [{name: "a", params: {b: 1}},
+                    {name: "c", params: {}},
+                    {name: "b", params: {d: true}},
+                    {name: "c", params: {e: ['hi, there', true]}},
+                    {name: "a", params: {b: true}}],
                    Parser.parseHeader('a; b=1, c, b; d, c; e="hi, there"; e, a; b') )
     }})
   }})
