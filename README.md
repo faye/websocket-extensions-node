@@ -41,6 +41,8 @@ expect to be given data and to be able to return data in these formats:
 are simple objects that must have at least the following properties, which
 represent the data encoded in the frame:
 
+| property     | description                                                        |
+| ------------ | ------------------------------------------------------------------ |
 | `final`      | `true` if the `FIN` bit is set, `false` otherwise                  |
 | `rsv1`       | `true` if the `RSV1` bit is set, `false` otherwise                 |
 | `rsv2`       | `true` if the `RSV2` bit is set, `false` otherwise                 |
@@ -60,6 +62,8 @@ frame in a consistent state, e.g. `length` must mirror the actual length of
 A `Message` represents a complete application message, which can be formed from
 text, binary and continuation frames. It has the following properties:
 
+| property | description                                                |
+| -------- | ---------------------------------------------------------- |
 | `frames` | an array of `Frame` objects                                |
 | `data`   | the concatenation of all the frame payloads in the message |
 
