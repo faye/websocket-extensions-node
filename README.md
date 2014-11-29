@@ -204,11 +204,13 @@ plug into the `websocket-extensions` framework.
 
 An `Extension` is any object that has the following properties:
 
-| `name` | a string containing the name of the extension as used in negotiation headers |
-| `type` | a string, must be `"permessage"` |
-| `rsv1` | either `true` if the extension uses the RSV1 bit, `false` otherwise |
-| `rsv2` | either `true` if the extension uses the RSV2 bit, `false` otherwise |
-| `rsv3` | either `true` if the extension uses the RSV3 bit, `false` otherwise |
+| property | description                                                                  |
+| -------- | ---------------------------------------------------------------------------- |
+| `name`   | a string containing the name of the extension as used in negotiation headers |
+| `type`   | a string, must be `"permessage"`                                             |
+| `rsv1`   | either `true` if the extension uses the RSV1 bit, `false` otherwise          |
+| `rsv2`   | either `true` if the extension uses the RSV2 bit, `false` otherwise          |
+| `rsv3`   | either `true` if the extension uses the RSV3 bit, `false` otherwise          |
 
 It must also implement the following methods:
 
