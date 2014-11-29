@@ -5,7 +5,7 @@ test.describe("Extensions", function() { with(this) {
   before(function() { with(this) {
     this.extensions = new Extensions()
 
-    this.ext     = {name: "deflate", rsv1: true, rsv2: false, rsv3: false}
+    this.ext     = {name: "deflate", type: "permessage", rsv1: true, rsv2: false, rsv3: false}
     this.session = {}
   }})
 
@@ -42,12 +42,12 @@ test.describe("Extensions", function() { with(this) {
       stub(session, "generateOffer").returns(offer)
       extensions.add(ext)
 
-      this.conflict = {name: "tar", rsv1: true, rsv2: false, rsv3: false}
+      this.conflict = {name: "tar", type: "permessage", rsv1: true, rsv2: false, rsv3: false}
       this.conflictSession = {}
       stub(conflict, "createClientSession").returns(conflictSession)
       stub(conflictSession, "generateOffer").returns({gzip: true})
 
-      this.nonconflict = {name: "reverse", rsv1: false, rsv2: true, rsv3: false}
+      this.nonconflict = {name: "reverse", type: "permessage", rsv1: false, rsv2: true, rsv3: false}
       this.nonconflictSession = {}
       stub(nonconflict, "createClientSession").returns(nonconflictSession)
       stub(nonconflictSession, "generateOffer").returns({utf8: true})
@@ -267,12 +267,12 @@ test.describe("Extensions", function() { with(this) {
       stub(ext, "createServerSession").returns(session)
       stub(session, "generateResponse").returns(response)
 
-      this.conflict = {name: "tar", rsv1: true, rsv2: false, rsv3: false}
+      this.conflict = {name: "tar", type: "permessage", rsv1: true, rsv2: false, rsv3: false}
       this.conflictSession = {}
       stub(conflict, "createServerSession").returns(conflictSession)
       stub(conflictSession, "generateResponse").returns({gzip: true})
 
-      this.nonconflict = {name: "reverse", rsv1: false, rsv2: true, rsv3: false}
+      this.nonconflict = {name: "reverse", type: "permessage", rsv1: false, rsv2: true, rsv3: false}
       this.nonconflictSession = {}
       stub(nonconflict, "createServerSession").returns(nonconflictSession)
       stub(nonconflictSession, "generateResponse").returns({utf8: true})
