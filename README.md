@@ -181,6 +181,13 @@ error and the session should fail the WebSocket connection with closing code
 to the transport, after applying `frame.maskingKey` to `frame.payload` if
 required.
 
+At the end of the WebSocket session (either when the protocol is explicitly
+ended or the transport connection disconnects), the driver should call:
+
+```js
+exts.close()
+```
+
 ### For extension authors
 
 An extension author is someone implementing an extension that transforms
@@ -321,6 +328,13 @@ The session must implement this method to take an outgoing `Message` as defined
 above, transform it in any way it needs, then return it via the callback. If
 there is an error processing the message, this method should yield an error as
 the first argument.
+
+```js
+session.close()
+```
+
+The framework will call this method when the WebSocket session ends, allowing
+the session to release any resources it's using.
 
 ## Examples
 
