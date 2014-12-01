@@ -1,5 +1,6 @@
 var Extensions = require("../lib/websocket_extensions"),
     test       = require("jstest").Test
+    FakeClock  = test.FakeClock
 
 test.describe("Extensions", function() { with(this) {
   before(function() { with(this) {
@@ -220,6 +221,38 @@ test.describe("Extensions", function() { with(this) {
           message.frames.push("reverse")
           callback(null, message)
         })
+      }})
+
+      describe("async processors", function() { with(this) {
+        include(FakeClock)
+
+        before(function() { with(this) {
+          clock.stub()
+          var tags = ["a", "b", "c", "d"]
+
+          stub(session, "processOutgoingMessage", function(message, callback) {
+            var time = message.frames.length === 0 ? 100 : 20
+            message.frames.push(tags.shift())
+            setTimeout(function() { callback(null, message) }, time)
+          })
+
+          stub(nonconflictSession, "processOutgoingMessage", function(message, callback) {
+            var time = message.frames.length === 1 ? 100 : 20
+            message.frames.push(tags.shift())
+            setTimeout(function() { callback(null, message) }, time)
+          })
+        }})
+
+        it("processes messages in order even if upstream emits them out of order", function() { with(this) {
+          extensions.activate("deflate, reverse")
+
+          var out = []
+          extensions.processOutgoingMessage({frames: []}, function(error, message) { out.push(message) })
+          extensions.processOutgoingMessage({frames: [1]}, function(error, message) { out.push(message) })
+          clock.tick(200)
+
+          assertEqual( [{frames: ["a", "c"]}, {frames: [1, "b", "d"]}], out )
+        }})
       }})
 
       it("processes messages in the order given in the server's response", function() { with(this) {
