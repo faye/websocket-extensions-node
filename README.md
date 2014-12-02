@@ -27,7 +27,7 @@ it as an argument to their chosen protocol library, without needing to know how
 either of them work, or how the `websocket-extensions` framework operates.
 
 The library is designed with the aim that any protocol implementation and any
-extension can be used together, so long as they support an abstract
+extension can be used together, so long as they support the same abstract
 representation of frames and messages.
 
 ### Data types
@@ -334,6 +334,15 @@ The session must implement this method to take an outgoing `Message` as defined
 above, transform it in any way it needs, then return it via the callback. If
 there is an error processing the message, this method should yield an error as
 the first argument.
+
+Note that both `processIncomingMessage()` and `processOutgoingMessage()` can
+perform their logic asynchronously, are allowed to process multiple messages
+concurrently, and are not required to complete working on messages in the same
+order the messages arrive. `websocket-extensions` will reorder messages as your
+extension emits them and will make sure every extension is given messages in the
+order they arrive from the driver. This allows extensions to maintain state that
+depends on the messages' wire order, for example keeping a DEFLATE compression
+context between messages.
 
 ```js
 session.close()
