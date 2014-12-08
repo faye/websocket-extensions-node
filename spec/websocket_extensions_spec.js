@@ -191,7 +191,7 @@ test.describe("Extensions", function() { with(this) {
         stub(session, "processIncomingMessage").yields([{message: "ENOENT"}])
 
         extensions.processIncomingMessage({frames: []}, function(error, message) {
-          assertEqual( "ENOENT", error.message )
+          assertEqual( "deflate: ENOENT", error.message )
           assertNull( message )
         })
       }})
@@ -278,7 +278,7 @@ test.describe("Extensions", function() { with(this) {
         stub(session, "processOutgoingMessage").yields([{message: "ENOENT"}])
 
         extensions.processOutgoingMessage({frames: []}, function(error, message) {
-          assertEqual( "ENOENT", error.message )
+          assertEqual( "deflate: ENOENT", error.message )
           assertNull( message )
         })
       }})
