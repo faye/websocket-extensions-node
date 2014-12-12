@@ -285,31 +285,8 @@ their use of RSV bits are not activated.
 #### *Session*
 
 The *Session* API must be implemented by both client and server sessions. It
-contains three methods: `validFrameRsv(frame)`,
-`processIncomingMessage(message)` and `processOutgoingMessage(message)`.
-
-```js
-session.validFrameRsv(frame)
-```
-
-This takes a *Frame* as defined above, and returns a response indicating which
-RSV bits are allowed to be set on the frame. (If a session is having this method
-called, the session is active and should its bits can be used.) For example, the
-`permessage-deflate` extension allows the RSV1 bit to be set on `text` and
-`binary` frames, and implements this method like this:
-
-```js
-Session.prototype.validFrameRsv = function(frame) {
-  if (frame.opcode === 1 || frame.opcode === 2) {
-    return {rsv1: true, rsv2: false, rsv3: false};
-  else
-    return {rsv1: false, rsv2: false, rsv3: false};
-};
-```
-
-Note that returning `false` for an `rsvX` field does not mean the session is
-forbidding its use; the framework assumes all RSV bits are banned unless a
-session indicates otherwise.
+contains two methods, `processIncomingMessage(message)` and
+`processOutgoingMessage(message)`.
 
 ```js
 session.processIncomingMessage(message, function(error, msg) { ... })
