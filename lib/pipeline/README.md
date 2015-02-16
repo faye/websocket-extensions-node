@@ -344,7 +344,7 @@ increment the `pending.out` counter on all cells immediately.
                 out: 1          out: 1          out: 1
 
 
-*m1* is handed off to `A`, meanwhile a second message `m2` arrives in the other
+*m1* is handed off to `A`, meanwhile a second message `m2` arrives in the same
 direction. All `pending.out` counters are again incremented.
 
 
