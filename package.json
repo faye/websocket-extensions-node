@@ -5,7 +5,7 @@
 , "keywords"        : ["websocket"]
 , "license"         : "MIT"
 
-, "version"         : "0.1.0"
+, "version"         : "0.1.1"
 , "engines"         : {"node": ">=0.6.0"}
 , "main"            : "./lib/websocket_extensions"
 , "devDependencies" : {"jstest": ""}
