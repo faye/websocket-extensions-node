@@ -489,8 +489,8 @@ test.describe("Extensions", function() { with(this) {
         assertEqual( "deflate; mode=compress", extensions.generateResponse("deflate, tar") )
       }})
 
-      it("returns an empty response if the header is invalid", function() { with(this) {
-        assertNull( extensions.generateResponse("x-webkit- -frame") )
+      it("throws an error if the header is invalid", function() { with(this) {
+        assertThrows(SyntaxError, function() { extensions.generateResponse("x-webkit- -frame") })
       }})
 
       it("returns a response for potentially conflicting extensions if their preceeding extensions don't build a session", function() { with(this) {
