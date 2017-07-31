@@ -6,11 +6,12 @@
 , "license"         : "MIT"
 
 , "version"         : "0.1.1"
-, "engines"         : {"node": ">=0.6.0"}
+, "engines"         : { "node": ">=0.8.0" }
 , "main"            : "./lib/websocket_extensions"
-, "devDependencies" : {"jstest": ""}
 
-, "scripts"         : {"test": "jstest spec/runner.js"}
+, "devDependencies" : { "jstest": "*" }
+
+, "scripts"         : { "test": "jstest spec/runner.js" }
 
 , "repository"      : { "type"  : "git"
                       , "url"   : "git://github.com/faye/websocket-extensions-node.git"
