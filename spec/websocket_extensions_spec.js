@@ -493,7 +493,7 @@ test.describe("Extensions", function() { with(this) {
         assertThrows(SyntaxError, function() { extensions.generateResponse("x-webkit- -frame") })
       }})
 
-      it("returns a response for potentially conflicting extensions if their preceeding extensions don't build a session", function() { with(this) {
+      it("returns a response for potentially conflicting extensions if their preceding extensions don't build a session", function() { with(this) {
         stub(ext, "createServerSession").returns(null)
         assertEqual( "tar; gzip", extensions.generateResponse("deflate, tar") )
       }})
