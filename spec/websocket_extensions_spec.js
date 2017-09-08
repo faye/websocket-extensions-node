@@ -259,8 +259,15 @@ test.describe("Extensions", function() { with(this) {
             messages.push(message)
           }
 
-          ;[1, 2, 3].forEach(function(n) { extensions.processOutgoingMessage([n], push) })
-          ;[4, 5, 6].forEach(function(n) { extensions.processIncomingMessage([n], push) })
+          ;[1, 2, 3].forEach(function(n) {
+            extensions.processOutgoingMessage([n], push)
+          })
+
+          ;[4, 5, 6].forEach(function(n, i) {
+            setTimeout(function() {
+              extensions.processIncomingMessage([n], push)
+            }, 20 * i)
+          })
 
           clock.tick(200)
         }})
