@@ -67,6 +67,17 @@ test.describe("Parser", function() { with(this) {
                     {name: "a", params: {b: true}}],
                    parse('a; b=1, c, b; d, c; e="hi, there"; e, a; b') )
     }})
+
+    it("parses an extension name that shadows an Object property", function() { with(this) {
+      assertEqual( [{name: "hasOwnProperty", params: {}}],
+                   parse('hasOwnProperty') )
+    }})
+
+    it("parses an extension param that shadows an Object property", function() { with(this) {
+      var result = parse('foo; hasOwnProperty; x')[0]
+      assertEqual( result.params.hasOwnProperty, true )
+    }})
+
   }})
 
   describe("serializeParams", function() { with(this) {
