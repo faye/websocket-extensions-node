@@ -327,5 +327,5 @@ the session to release any resources it's using.
 
 ## Examples
 
-* Consumer: [websocket-driver](https://github.com/faye/websocket-driver-node)
-* Provider: [permessage-deflate](https://github.com/faye/permessage-deflate-node)
+- Consumer: [websocket-driver](https://github.com/faye/websocket-driver-node)
+- Provider: [permessage-deflate](https://github.com/faye/permessage-deflate-node)
