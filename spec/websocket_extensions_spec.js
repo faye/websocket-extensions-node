@@ -6,7 +6,7 @@ test.describe("Extensions", function() { with(this) {
   before(function() { with(this) {
     this.extensions = new Extensions()
 
-    this.ext     = {name: "deflate", type: "permessage", rsv1: true, rsv2: false, rsv3: false}
+    this.ext     = { name: "deflate", type: "permessage", rsv1: true, rsv2: false, rsv3: false }
     this.session = {}
   }})
 
@@ -38,20 +38,20 @@ test.describe("Extensions", function() { with(this) {
 
   describe("client sessions", function() { with(this) {
     before(function() { with(this) {
-      this.offer = {mode: "compress"}
+      this.offer = { mode: "compress" }
       stub(ext, "createClientSession").returns(session)
       stub(session, "generateOffer").returns(offer)
       extensions.add(ext)
 
-      this.conflict = {name: "tar", type: "permessage", rsv1: true, rsv2: false, rsv3: false}
+      this.conflict = { name: "tar", type: "permessage", rsv1: true, rsv2: false, rsv3: false }
       this.conflictSession = {}
       stub(conflict, "createClientSession").returns(conflictSession)
-      stub(conflictSession, "generateOffer").returns({gzip: true})
+      stub(conflictSession, "generateOffer").returns({ gzip: true })
 
-      this.nonconflict = {name: "reverse", type: "permessage", rsv1: false, rsv2: true, rsv3: false}
+      this.nonconflict = { name: "reverse", type: "permessage", rsv1: false, rsv2: true, rsv3: false }
       this.nonconflictSession = {}
       stub(nonconflict, "createClientSession").returns(nonconflictSession)
-      stub(nonconflictSession, "generateOffer").returns({utf8: true})
+      stub(nonconflictSession, "generateOffer").returns({ utf8: true })
 
       stub(session, "activate").returns(true)
       stub(conflictSession, "activate").returns(true)
@@ -133,18 +133,18 @@ test.describe("Extensions", function() { with(this) {
       }})
 
       it("activates one session with a boolean param", function() { with(this) {
-        expect(session, "activate").given({gzip: true}).exactly(1).returning(true)
+        expect(session, "activate").given({ gzip: true }).exactly(1).returning(true)
         extensions.activate("deflate; gzip")
       }})
 
       it("activates one session with a string param", function() { with(this) {
-        expect(session, "activate").given({mode: "compress"}).exactly(1).returning(true)
+        expect(session, "activate").given({ mode: "compress" }).exactly(1).returning(true)
         extensions.activate("deflate; mode=compress")
       }})
 
       it("activates multiple sessions", function() { with(this) {
-        expect(session, "activate").given({a: true}).exactly(1).returning(true)
-        expect(nonconflictSession, "activate").given({b: true}).exactly(1).returning(true)
+        expect(session, "activate").given({ a: true }).exactly(1).returning(true)
+        expect(nonconflictSession, "activate").given({ b: true }).exactly(1).returning(true)
         extensions.activate("deflate; a, reverse; b")
       }})
 
@@ -180,7 +180,7 @@ test.describe("Extensions", function() { with(this) {
       it("processes messages in the reverse order given in the server's response", function() { with(this) {
         extensions.activate("deflate, reverse")
 
-        extensions.processIncomingMessage({frames: []}, function(error, message) {
+        extensions.processIncomingMessage({ frames: [] }, function(error, message) {
           assertNull( error )
           assertEqual( ["reverse", "deflate"], message.frames )
         })
@@ -188,9 +188,9 @@ test.describe("Extensions", function() { with(this) {
 
       it("yields an error if a session yields an error", function() { with(this) {
         extensions.activate("deflate")
-        stub(session, "processIncomingMessage").yields([{message: "ENOENT"}])
+        stub(session, "processIncomingMessage").yields([{ message: "ENOENT" }])
 
-        extensions.processIncomingMessage({frames: []}, function(error, message) {
+        extensions.processIncomingMessage({ frames: [] }, function(error, message) {
           assertEqual( "deflate: ENOENT", error.message )
           assertNull( message )
         })
@@ -198,11 +198,11 @@ test.describe("Extensions", function() { with(this) {
 
       it("does not call sessions after one has yielded an error", function() { with(this) {
         extensions.activate("deflate, reverse")
-        stub(nonconflictSession, "processIncomingMessage").yields([{message: "ENOENT"}])
+        stub(nonconflictSession, "processIncomingMessage").yields([{ message: "ENOENT" }])
 
         expect(session, "processIncomingMessage").exactly(0)
 
-        extensions.processIncomingMessage({frames: []}, function() {})
+        extensions.processIncomingMessage({ frames: [] }, function() {})
       }})
     }})
 
@@ -336,11 +336,11 @@ test.describe("Extensions", function() { with(this) {
           extensions.activate("deflate, reverse")
 
           var out = []
-          extensions.processOutgoingMessage({frames: []}, function(error, message) { out.push(message) })
-          extensions.processOutgoingMessage({frames: [1]}, function(error, message) { out.push(message) })
+          extensions.processOutgoingMessage({ frames: [] }, function(error, message) { out.push(message) })
+          extensions.processOutgoingMessage({ frames: [1] }, function(error, message) { out.push(message) })
           clock.tick(200)
 
-          assertEqual( [{frames: ["a", "c"]}, {frames: [1, "b", "d"]}], out )
+          assertEqual( [{ frames: ["a", "c"] }, { frames: [1, "b", "d"] }], out )
         }})
 
         it("defers closing until the extension has finished processing", function() { with(this) {
@@ -349,7 +349,7 @@ test.describe("Extensions", function() { with(this) {
           var closed = false, notified = false
           stub(session, "close", function() { closed = true })
 
-          extensions.processOutgoingMessage({frames: []}, function() {})
+          extensions.processOutgoingMessage({ frames: [] }, function() {})
           extensions.close(function() { notified = true })
 
           clock.tick(50)
@@ -366,7 +366,7 @@ test.describe("Extensions", function() { with(this) {
           stub(session, "close", function() { closed[0] = true })
           stub(nonconflictSession, "close", function() { closed[1] = true })
 
-          extensions.processOutgoingMessage({frames: []}, function() {});
+          extensions.processOutgoingMessage({ frames: [] }, function() {});
           extensions.close(function() { notified = true })
 
           clock.tick(50)
@@ -384,7 +384,7 @@ test.describe("Extensions", function() { with(this) {
           extensions.activate("deflate")
           stub(session, "close", function() { closed = true })
 
-          extensions.processOutgoingMessage({frames: []}, function() {})
+          extensions.processOutgoingMessage({ frames: [] }, function() {})
           extensions.close()
           clock.tick(100)
 
@@ -397,7 +397,7 @@ test.describe("Extensions", function() { with(this) {
       it("processes messages in the order given in the server's response", function() { with(this) {
         extensions.activate("deflate, reverse")
 
-        extensions.processOutgoingMessage({frames: []}, function(error, message) {
+        extensions.processOutgoingMessage({ frames: [] }, function(error, message) {
           assertNull( error )
           assertEqual( ["deflate", "reverse"], message.frames )
         })
@@ -406,7 +406,7 @@ test.describe("Extensions", function() { with(this) {
       it("processes messages in the server's order, not the client's order", function() { with(this) {
         extensions.activate("reverse, deflate")
 
-        extensions.processOutgoingMessage({frames: []}, function(error, message) {
+        extensions.processOutgoingMessage({ frames: [] }, function(error, message) {
           assertNull( error )
           assertEqual( ["reverse", "deflate"], message.frames )
         })
@@ -414,9 +414,9 @@ test.describe("Extensions", function() { with(this) {
 
       it("yields an error if a session yields an error", function() { with(this) {
         extensions.activate("deflate")
-        stub(session, "processOutgoingMessage").yields([{message: "ENOENT"}])
+        stub(session, "processOutgoingMessage").yields([{ message: "ENOENT" }])
 
-        extensions.processOutgoingMessage({frames: []}, function(error, message) {
+        extensions.processOutgoingMessage({ frames: [] }, function(error, message) {
           assertEqual( "deflate: ENOENT", error.message )
           assertNull( message )
         })
@@ -424,30 +424,30 @@ test.describe("Extensions", function() { with(this) {
 
       it("does not call sessions after one has yielded an error", function() { with(this) {
         extensions.activate("deflate, reverse")
-        stub(session, "processOutgoingMessage").yields([{message: "ENOENT"}])
+        stub(session, "processOutgoingMessage").yields([{ message: "ENOENT" }])
 
         expect(nonconflictSession, "processOutgoingMessage").exactly(0)
 
-        extensions.processOutgoingMessage({frames: []}, function() {})
+        extensions.processOutgoingMessage({ frames: [] }, function() {})
       }})
     }})
   }})
 
   describe("server sessions", function() { with(this) {
     before(function() { with(this) {
-      this.response = {mode: "compress"}
+      this.response = { mode: "compress" }
       stub(ext, "createServerSession").returns(session)
       stub(session, "generateResponse").returns(response)
 
-      this.conflict = {name: "tar", type: "permessage", rsv1: true, rsv2: false, rsv3: false}
+      this.conflict = { name: "tar", type: "permessage", rsv1: true, rsv2: false, rsv3: false }
       this.conflictSession = {}
       stub(conflict, "createServerSession").returns(conflictSession)
-      stub(conflictSession, "generateResponse").returns({gzip: true})
+      stub(conflictSession, "generateResponse").returns({ gzip: true })
 
-      this.nonconflict = {name: "reverse", type: "permessage", rsv1: false, rsv2: true, rsv3: false}
+      this.nonconflict = { name: "reverse", type: "permessage", rsv1: false, rsv2: true, rsv3: false }
       this.nonconflictSession = {}
       stub(nonconflict, "createServerSession").returns(nonconflictSession)
-      stub(nonconflictSession, "generateResponse").returns({utf8: true})
+      stub(nonconflictSession, "generateResponse").returns({ utf8: true })
 
       extensions.add(ext)
       extensions.add(conflict)
@@ -456,12 +456,12 @@ test.describe("Extensions", function() { with(this) {
 
     describe("generateResponse", function() { with(this) {
       it("asks the extension for a server session with the offer", function() { with(this) {
-        expect(ext, "createServerSession").given([{flag: true}]).exactly(1).returning(session)
+        expect(ext, "createServerSession").given([{ flag: true }]).exactly(1).returning(session)
         extensions.generateResponse("deflate; flag")
       }})
 
       it("asks the extension for a server session with multiple offers", function() { with(this) {
-        expect(ext, "createServerSession").given([{a: true}, {b: true}]).exactly(1).returning(session)
+        expect(ext, "createServerSession").given([{ a: true }, { b: true }]).exactly(1).returning(session)
         extensions.generateResponse("deflate; a, deflate; b")
       }})
 
