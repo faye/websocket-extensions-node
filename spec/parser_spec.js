@@ -78,6 +78,11 @@ test.describe("Parser", function() { with(this) {
       assertEqual( result.params.hasOwnProperty, true )
     }})
 
+    it("rejects a string missing its closing quote", function() { with(this) {
+      assertThrows(SyntaxError, function() {
+        parse('foo; bar="fooa\\a\\a\\a\\a\\a\\a\\a\\a\\a\\a\\a\\a\\a\\a\\a\\a\\a\\a\\a\\a\\a\\a\\a\\a\\a\\a\\a\\a\\a\\a')
+      })
+    }})
   }})
 
   describe("serializeParams", function() { with(this) {
