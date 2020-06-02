@@ -1,3 +1,9 @@
+### 0.1.4 / 2020-06-02
+
+- Remove a ReDoS vulnerability in the header parser (CVE-2020-7662, reported by
+  Robert McLaughlin)
+- Change license from MIT to Apache 2.0
+
 ### 0.1.3 / 2017-11-11
 
 - Accept extension names and parameters including uppercase letters
