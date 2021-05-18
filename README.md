@@ -1,4 +1,4 @@
-# websocket-extensions [![Build status](https://secure.travis-ci.org/faye/websocket-extensions-node.svg)](http://travis-ci.org/faye/websocket-extensions-node)
+# websocket-extensions
 
 A minimal framework that supports the implementation of WebSocket extensions in
 a way that's decoupled from the main protocol. This library aims to allow a
