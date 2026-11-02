@@ -39,9 +39,19 @@ test.describe("Parser", function() { with(this) {
                    parse('a; b') )
     }})
 
+    it("parses a flag with tabs around ';'", function() { with(this) {
+      assertEqual( [{ name: "a", params: { b: true }}],
+                   parse('a\t;\tb') )
+    }})
+
     it("parses an unquoted param", function() { with(this) {
       assertEqual( [{ name: "a", params: { b: 1 }}],
                    parse('a; b=1') )
+    }})
+
+    it("parses an unquoted param with space around '='", function() { with(this) {
+      assertEqual( [{ name: "a", params: { b: 1 }}],
+                   parse('a; b = 1') )
     }})
 
     it("parses a quoted param", function() { with(this) {
@@ -65,7 +75,7 @@ test.describe("Parser", function() { with(this) {
                     { name: "b", params: { d: true }},
                     { name: "c", params: { e: ['hi, there', true] }},
                     { name: "a", params: { b: true }}],
-                   parse('a; b=1, c, b; d, c; e="hi, there"; e, a; b') )
+                   parse('a; b=1, c, b ; d , c; e = "hi, there"; e, a ; b') )
     }})
 
     it("parses an extension name that shadows an Object property", function() { with(this) {
@@ -78,10 +88,18 @@ test.describe("Parser", function() { with(this) {
       assertEqual( result.params.hasOwnProperty, true )
     }})
 
-    it("rejects a string missing its closing quote", function() { with(this) {
-      assertThrows(SyntaxError, function() {
-        parse('foo; bar="fooa\\a\\a\\a\\a\\a\\a\\a\\a\\a\\a\\a\\a\\a\\a\\a\\a\\a\\a\\a\\a\\a\\a\\a\\a\\a\\a\\a\\a\\a\\a')
-      })
+    describe("ReDoS avoidance", function() { with(this) {
+      it("rejects a long sequence of LWS", function() { with(this) {
+        assertThrows(SyntaxError, function() {
+          parse('foo; bar=                              "foo')
+        })
+      }})
+
+      it("rejects a long sequence of quote-escapes", function() { with(this) {
+        assertThrows(SyntaxError, function() {
+          parse('foo; bar="fooa\\a\\a\\a\\a\\a\\a\\a\\a\\a\\a\\a\\a\\a\\a\\a\\a\\a\\a\\a\\a\\a\\a\\a\\a\\a\\a\\a\\a\\a\\a')
+        })
+      }})
     }})
   }})
 
