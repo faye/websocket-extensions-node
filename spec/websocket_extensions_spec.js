@@ -4,7 +4,7 @@ var Extensions = require("../lib/websocket_extensions"),
 
 test.describe("Extensions", function() { with(this) {
   before(function() { with(this) {
-    this.extensions = new Extensions()
+    this.extensions = new Extensions({ maxLength: 0x3fff })
 
     this.ext     = { name: "deflate", type: "permessage", rsv1: true, rsv2: false, rsv3: false }
     this.session = {}
@@ -60,7 +60,7 @@ test.describe("Extensions", function() { with(this) {
 
     describe("generateOffer", function() { with(this) {
       it("asks the extension to create a client session", function() { with(this) {
-        expect(ext, "createClientSession").exactly(1).returning(session)
+        expect(ext, "createClientSession").given({ maxLength: 0x3fff }).exactly(1).returning(session)
         extensions.generateOffer()
       }})
 
@@ -456,12 +456,12 @@ test.describe("Extensions", function() { with(this) {
 
     describe("generateResponse", function() { with(this) {
       it("asks the extension for a server session with the offer", function() { with(this) {
-        expect(ext, "createServerSession").given([{ flag: true }]).exactly(1).returning(session)
+        expect(ext, "createServerSession").given([{ flag: true }], { maxLength: 0x3fff }).exactly(1).returning(session)
         extensions.generateResponse("deflate; flag")
       }})
 
       it("asks the extension for a server session with multiple offers", function() { with(this) {
-        expect(ext, "createServerSession").given([{ a: true }, { b: true }]).exactly(1).returning(session)
+        expect(ext, "createServerSession").given([{ a: true }, { b: true }], { maxLength: 0x3fff }).exactly(1).returning(session)
         extensions.generateResponse("deflate; a, deflate; b")
       }})
 

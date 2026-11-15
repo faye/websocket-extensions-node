@@ -82,6 +82,14 @@ var exts = new Extensions();
 exts.add(deflate);
 ```
 
+The `new Extensions()` constructor takes an optional argument, which is an
+object containing options that will be passed down to individual extensions. The
+supported options are:
+
+- `maxLength` - the maximum allowed size of incoming message frames, in bytes.
+  Individual extensions should ensure that messages do not exceed this size, or
+  allocate memory beyond this amount, as a result of processing the message.
+
 In the following examples, `exts` refers to this `Extensions` instance.
 
 #### Client sessions
@@ -212,18 +220,20 @@ An `Extension` is any object that has the following properties:
 It must also implement the following methods:
 
 ```js
-ext.createClientSession()
+ext.createClientSession(options)
 ```
 
-This returns a *ClientSession*, whose interface is defined below.
+This returns a *ClientSession*, whose interface is defined below. `options` is
+the value of the optional argument that was passed to `new Extensions(options)`.
 
 ```js
-ext.createServerSession(offers)
+ext.createServerSession(offers, options)
 ```
 
 This takes an array of offer params and returns a *ServerSession*, whose
-interface is defined below. For example, if the client handshake contains the
-offer header:
+interface is defined below. `options` is the value of the optional argument that
+was passed to `new Extensions(options)`. For example, if the client handshake
+contains the offer header:
 
 ```
 Sec-WebSocket-Extensions: permessage-deflate; server_no_context_takeover; server_max_window_bits=8, \
@@ -236,7 +246,7 @@ then the `permessage-deflate` extension will receive the call:
 ext.createServerSession([
   { server_no_context_takeover: true, server_max_window_bits: 8 },
   { server_max_window_bits: 15 }
-]);
+], options);
 ```
 
 The extension must decide which set of parameters it wants to accept, if any,
@@ -245,8 +255,8 @@ otherwise.
 
 #### *ClientSession*
 
-A *ClientSession* is the type returned by `ext.createClientSession()`. It must
-implement the following methods, as well as the *Session* API listed below.
+A *ClientSession* is the type returned by `ext.createClientSession(options)`. It
+must implement the following methods, as well as the *Session* API listed below.
 
 ```js
 clientSession.generateOffer()
@@ -272,8 +282,9 @@ the framework will interpret this as the client rejecting the response, and will
 
 #### *ServerSession*
 
-A *ServerSession* is the type returned by `ext.createServerSession(offers)`. It
-must implement the following methods, as well as the *Session* API listed below.
+A *ServerSession* is the type returned by `ext.createServerSession(offers,
+options)`. It must implement the following methods, as well as the *Session* API
+listed below.
 
 ```js
 serverSession.generateResponse()
