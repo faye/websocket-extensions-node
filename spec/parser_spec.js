@@ -116,8 +116,10 @@ test.describe("Parser", function() { with(this) {
       assertEqual( 'a; b=42', Parser.serializeParams('a', { b: '42' }) )
     }})
 
-    it("serializes a quoted param", function() { with(this) {
-      assertEqual( 'a; b="hi, there"', Parser.serializeParams('a', { b: 'hi, there' }) )
+    it("refused to serialize a non-token param", function() { with(this) {
+      assertThrows(SyntaxError, function() {
+        Parser.serializeParams('a', { b: 'hi, there' })
+      })
     }})
 
     it("serializes multiple params", function() { with(this) {
