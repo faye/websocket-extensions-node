@@ -1,3 +1,11 @@
+### 0.3.0 / 2026-11-25
+
+- Refuse to serialize parameter values that do not conform to the `token`
+  grammar, c.f. RFC 6455:
+
+  > When using the quoted-string syntax variant, the value after quoted-string
+  > unescaping MUST conform to the 'token' ABNF.
+
 ### 0.2.0 / 2026-11-16
 
 - Add an `options` argument to the `new Extensions()` constructor, to provide
